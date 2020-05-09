@@ -5,7 +5,7 @@
   "displayName": "IP Address",
   "export": "IpAddress",
   "summary": "The IP Address application performs operations on IP addresses.",
-  "src": "main.js",
+  "src": "lab03.main.js",
   "encrypted": false,
   "roles": [
     "admin",
