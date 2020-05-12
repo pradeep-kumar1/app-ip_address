@@ -1,4 +1,12 @@
 /*
+  Import the ip-cidr npm package.
+  See https://www.npmjs.com/package/ip-cidr
+  The ip-cidr package exports a class.
+  Assign the class definition to variable IPCIDR.
+*/
+const IPCIDR = require('ip-cidr');
+
+/*
   Import the built-in path module.
   See https://nodejs.org/api/path.html
   The path module provides utilities for working with file and directory paths.
@@ -15,13 +23,6 @@ const path = require('path');
  */
 const { getIpv4MappedIpv6Address } = require(path.join(__dirname, 'ipv6.js'));
 
-/*
-  Import the ip-cidr npm package.
-  See https://www.npmjs.com/package/ip-cidr
-  The ip-cidr package exports a class.
-  Assign the class definition to variable IPCIDR.
-*/
-const IPCIDR = require('ip-cidr');
 
 class IpAddress {
   constructor() {
@@ -33,14 +34,15 @@ class IpAddress {
     log.info('Starting the IpAddress product.');
   }
 
-/**
+
+  /**
  * Calculate and return the first host IP address from a CIDR subnet.
  * @param {string} cidrStr - The IPv4 subnet expressed
  *                 in CIDR format.
  * @param {callback} callback - A callback function.
- * @return {string} (firstIpAddress) - An IPv4 address.
+ * @return {JSON} (firstIpAddress) - An IPv4 address.
  */
- getFirstIpAddress(cidrStr, callback) {
+getFirstIpAddress(cidrStr, callback) {
 
   // Initialize return arguments for callback
   let firstIpAddress = null;
@@ -69,9 +71,25 @@ class IpAddress {
   // Node.js convention is to pass error data as the first argument to a callback.
   // The IAP convention is to pass returned data as the first argument and error
   // data as the second argument to the callback function.
-  return callback(firstIpAddress, callbackError);
-  }
+  let ipv6ip=null;
+if(firstIpAddress!=null){
+  ipv6ip=getIpv4MappedIpv6Address(firstIpAddress);
+}
+//   let jsonString =  '{"ipv4":"'+firstIpAddress+'", "ipv6" : "'+ipv6ip+'"}';//`  {IPv4: ${data} ipv6: ${mappedAddress}}`;
 
+  
+//     let jsonval=JSON.stringify(jsonString);
+    
+//   let jsonObj = JSON.parse(jsonval);
+
+   let jsonObj =  {
+                    ipv4: firstIpAddress,
+                    ipv6: ipv6ip
+                };
+ 
+  return callback(jsonObj, callbackError);
 }
 
+
+}
 module.exports = new IpAddress;
